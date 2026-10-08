@@ -1,0 +1,229 @@
+/* =====================================================
+   CASIOC - THEME
+   ===================================================== */
+
+
+/* ================= LIGHT THEME ================= */
+
+:root {
+
+    /* Page */
+
+    --page-background:
+        #e9eef5;
+
+
+    /* Main surfaces */
+
+    --surface:
+        #f7f9fc;
+
+    --calculator-background:
+        #f3f5f8;
+
+
+    /* Borders */
+
+    --calculator-border:
+        rgba(255, 255, 255, 0.8);
+
+
+    /* Text */
+
+    --text-primary:
+        #20242b;
+
+    --text-secondary:
+        #737b87;
+
+
+    /* Accent */
+
+    --accent:
+        #2563eb;
+
+    --accent-hover:
+        #1d4ed8;
+
+    --accent-shadow:
+        rgba(37, 99, 235, 0.25);
+
+
+    /* Display */
+
+    --display-background:
+        #1e232b;
+
+    --display-text:
+        #ffffff;
+
+    --display-secondary:
+        #aeb6c2;
+
+
+    /* Buttons */
+
+    --button-background:
+        #ffffff;
+
+    --button-text:
+        #20242b;
+
+    --operator-background:
+        #e8efff;
+
+    --function-background:
+        #eef1f5;
+
+    --function-text:
+        #4b5563;
+
+    --advanced-background:
+        #e9edf3;
+
+
+    /* History */
+
+    --history-item-background:
+        #eef1f5;
+
+    --history-item-hover:
+        #e3e8f0;
+
+
+    /* Error */
+
+    --error:
+        #dc2626;
+
+
+    /* Shadows */
+
+    --calculator-shadow:
+        15px 18px 35px rgba(31, 41, 55, 0.15),
+        -8px -8px 20px rgba(255, 255, 255, 0.9);
+
+    --display-shadow:
+        inset 0 3px 10px rgba(0, 0, 0, 0.3);
+
+    --button-shadow:
+        5px 6px 12px rgba(31, 41, 55, 0.14),
+        -3px -3px 8px rgba(255, 255, 255, 0.9);
+
+    --button-hover-shadow:
+        7px 9px 16px rgba(31, 41, 55, 0.16),
+        -4px -4px 10px rgba(255, 255, 255, 0.95);
+
+    --button-pressed-shadow:
+        2px 3px 6px rgba(31, 41, 55, 0.18);
+
+    --soft-shadow:
+        6px 8px 18px rgba(31, 41, 55, 0.12),
+        -4px -4px 10px rgba(255, 255, 255, 0.85);
+
+    --hover-shadow:
+        8px 10px 20px rgba(31, 41, 55, 0.15),
+        -4px -4px 12px rgba(255, 255, 255, 0.9);
+
+    --pressed-shadow:
+        2px 3px 7px rgba(31, 41, 55, 0.15);
+
+    --small-shadow:
+        3px 4px 8px rgba(31, 41, 55, 0.1);
+
+    --small-hover-shadow:
+        4px 6px 11px rgba(31, 41, 55, 0.13);
+
+    --small-pressed-shadow:
+        1px 2px 4px rgba(31, 41, 55, 0.15);
+}
+
+
+/* ================= DARK THEME ================= */
+
+body.dark {
+
+    --page-background:
+        #0f172a;
+
+    --surface:
+        #1e293b;
+
+    --calculator-background:
+        #1b2433;
+
+    --calculator-border:
+        rgba(255, 255, 255, 0.05);
+
+    --text-primary:
+        #f8fafc;
+
+    --text-secondary:
+        #94a3b8;
+
+    --button-background:
+        #273449;
+
+    --button-text:
+        #f8fafc;
+
+    --operator-background:
+        #253b63;
+
+    --function-background:
+        #263242;
+
+    --function-text:
+        #cbd5e1;
+
+    --advanced-background:
+        #273449;
+
+    --history-item-background:
+        #273449;
+
+    --history-item-hover:
+        #334155;
+
+    --display-background:
+        #0b1120;
+
+    --display-text:
+        #ffffff;
+
+    --display-secondary:
+        #94a3b8;
+
+    --calculator-shadow:
+        12px 15px 30px rgba(0, 0, 0, 0.4);
+
+    --display-shadow:
+        inset 0 3px 12px rgba(0, 0, 0, 0.5);
+
+    --button-shadow:
+        5px 6px 12px rgba(0, 0, 0, 0.3);
+
+    --button-hover-shadow:
+        7px 9px 16px rgba(0, 0, 0, 0.4);
+
+    --button-pressed-shadow:
+        2px 3px 6px rgba(0, 0, 0, 0.4);
+
+    --soft-shadow:
+        6px 8px 18px rgba(0, 0, 0, 0.3);
+
+    --hover-shadow:
+        8px 10px 20px rgba(0, 0, 0, 0.4);
+
+    --pressed-shadow:
+        2px 3px 7px rgba(0, 0, 0, 0.4);
+
+    --small-shadow:
+        3px 4px 8px rgba(0, 0, 0, 0.25);
+
+    --small-hover-shadow:
+        4px 6px 11px rgba(0, 0, 0, 0.3);
+
+    --small-pressed-shadow:
+        1px 2px 4px rgba(0, 0, 0, 0.35);
+}

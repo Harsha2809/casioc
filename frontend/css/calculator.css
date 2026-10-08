@@ -1,0 +1,604 @@
+/* =====================================================
+   CASIOC - MAIN CALCULATOR STYLES
+   Member 4 - Frontend UI
+   ===================================================== */
+
+
+/* ================= GLOBAL ================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+    min-height: 100vh;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background: var(--page-background);
+
+    color: var(--text-primary);
+
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+
+button {
+    font-family: inherit;
+}
+
+
+/* ================= APP ================= */
+
+.app-container {
+
+    width: min(440px, 94%);
+
+    margin: 40px auto;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+
+/* ================= HEADER ================= */
+
+.calculator-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 5px;
+}
+
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.brand-icon {
+
+    width: 45px;
+
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: var(--accent);
+
+    color: white;
+
+    font-size: 23px;
+
+    font-weight: 800;
+
+    box-shadow:
+        0 7px 15px var(--accent-shadow);
+}
+
+
+.brand h1 {
+
+    font-size: 25px;
+
+    letter-spacing: 2px;
+
+    font-weight: 800;
+}
+
+
+.brand p {
+
+    margin-top: 2px;
+
+    font-size: 12px;
+
+    color: var(--text-secondary);
+}
+
+
+/* ================= THEME BUTTON ================= */
+
+.theme-toggle {
+
+    width: 45px;
+
+    height: 45px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: var(--surface);
+
+    color: var(--text-primary);
+
+    cursor: pointer;
+
+    font-size: 19px;
+
+    box-shadow: var(--soft-shadow);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.theme-toggle:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: var(--hover-shadow);
+}
+
+
+.theme-toggle:active {
+
+    transform: translateY(2px);
+
+    box-shadow: var(--pressed-shadow);
+}
+
+
+/* ================= CALCULATOR ================= */
+
+.calculator {
+
+    width: 100%;
+
+    padding: 22px;
+
+    border-radius: 28px;
+
+    background: var(--calculator-background);
+
+    box-shadow: var(--calculator-shadow);
+
+    border: 1px solid var(--calculator-border);
+
+    animation: calculatorOpen 0.5s ease-out;
+}
+
+
+/* ================= DISPLAY ================= */
+
+.display {
+
+    width: 100%;
+
+    min-height: 135px;
+
+    margin-bottom: 20px;
+
+    padding: 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    justify-content: flex-end;
+
+    overflow: hidden;
+
+    border-radius: 21px;
+
+    background: var(--display-background);
+
+    color: var(--display-text);
+
+    box-shadow: var(--display-shadow);
+}
+
+
+.expression {
+
+    width: 100%;
+
+    min-height: 25px;
+
+    overflow: hidden;
+
+    text-align: right;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    font-size: 18px;
+
+    color: var(--display-secondary);
+
+}
+
+
+.result {
+
+    width: 100%;
+
+    margin-top: 7px;
+
+    overflow: hidden;
+
+    text-align: right;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    font-size: 43px;
+
+    line-height: 1.1;
+
+    font-weight: 700;
+
+    color: var(--display-text);
+}
+
+
+/* ================= BUTTON GRID ================= */
+
+.calculator-buttons {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+}
+
+
+/* ================= NORMAL BUTTON ================= */
+
+.calculator-button {
+
+    height: 65px;
+
+    border: none;
+
+    border-radius: 17px;
+
+    background: var(--button-background);
+
+    color: var(--button-text);
+
+    font-size: 21px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    -webkit-tap-highlight-color: transparent;
+
+    box-shadow: var(--button-shadow);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.2s ease;
+}
+
+
+.calculator-button:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow: var(--button-hover-shadow);
+}
+
+
+.calculator-button:active {
+
+    transform: translateY(3px);
+
+    box-shadow: var(--button-pressed-shadow);
+}
+
+
+/* ================= FUNCTION BUTTON ================= */
+
+.function-button {
+
+    color: var(--function-text);
+
+    background: var(--function-background);
+}
+
+
+/* ================= OPERATOR ================= */
+
+.operator-button {
+
+    color: var(--accent);
+
+    background: var(--operator-background);
+
+    font-size: 23px;
+}
+
+
+/* ================= EQUALS ================= */
+
+.equals-button {
+
+    background: var(--accent);
+
+    color: white;
+
+    font-size: 25px;
+
+    box-shadow:
+        0 8px 16px var(--accent-shadow);
+}
+
+
+.equals-button:hover {
+
+    background: var(--accent-hover);
+
+    box-shadow:
+        0 12px 22px var(--accent-shadow);
+}
+
+
+/* ================= ADVANCED OPERATIONS ================= */
+
+.advanced-section {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 9px;
+
+    margin-top: 13px;
+}
+
+
+.advanced-button {
+
+    height: 42px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: var(--advanced-background);
+
+    color: var(--text-primary);
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow: var(--small-shadow);
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+
+.advanced-button:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: var(--small-hover-shadow);
+}
+
+
+.advanced-button:active {
+
+    transform: translateY(2px);
+
+    box-shadow: var(--small-pressed-shadow);
+}
+
+
+/* ================= STATUS ================= */
+
+.status-message {
+
+    min-height: 22px;
+
+    margin-top: 12px;
+
+    text-align: center;
+
+    font-size: 13px;
+
+    color: var(--text-secondary);
+
+    opacity: 0;
+
+    transition: opacity 0.2s ease;
+}
+
+
+.status-message.visible {
+
+    opacity: 1;
+}
+
+
+.status-message.error {
+
+    color: var(--error);
+}
+
+
+/* ================= HISTORY ================= */
+
+.history-panel {
+
+    padding: 20px;
+
+    border-radius: 22px;
+
+    background: var(--surface);
+
+    box-shadow: var(--soft-shadow);
+
+    border: 1px solid var(--calculator-border);
+}
+
+
+.history-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+
+.history-header h2 {
+
+    font-size: 17px;
+}
+
+
+.history-header p {
+
+    margin-top: 4px;
+
+    font-size: 12px;
+
+    color: var(--text-secondary);
+}
+
+
+.clear-history-button {
+
+    border: none;
+
+    background: transparent;
+
+    color: var(--accent);
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+/* ================= HISTORY LIST ================= */
+
+.history-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-top: 15px;
+}
+
+
+.history-item {
+
+    padding: 12px 14px;
+
+    border-radius: 12px;
+
+    background: var(--history-item-background);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        background-color 0.2s ease;
+}
+
+
+.history-item:hover {
+
+    transform: translateX(3px);
+
+    background: var(--history-item-hover);
+}
+
+
+.history-expression {
+
+    font-size: 13px;
+
+    color: var(--text-secondary);
+}
+
+
+.history-result {
+
+    margin-top: 3px;
+
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+
+.empty-history {
+
+    padding: 18px;
+
+    text-align: center;
+
+    font-size: 13px;
+
+    color: var(--text-secondary);
+}
+
+
+/* ================= ACCESSIBILITY ================= */
+
+button:focus-visible {
+
+    outline: 3px solid var(--accent);
+
+    outline-offset: 3px;
+}

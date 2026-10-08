@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="CASIOC - Real-Time 3D Calculator"
+    >
+
+    <title>CASIOC Calculator</title>
+
+    <!-- Main calculator styling -->
+    <link rel="stylesheet" href="css/calculator.css">
+
+    <!-- Animations -->
+    <link rel="stylesheet" href="css/animations.css">
+
+    <!-- Responsive design -->
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Theme -->
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+
+<body>
+
+    <main class="app-container">
+
+        <!-- ================= HEADER ================= -->
+
+        <header class="calculator-header">
+
+            <div class="brand">
+                <span class="brand-icon">C</span>
+
+                <div>
+                    <h1>CASIOC</h1>
+                    <p>3D Calculator</p>
+                </div>
+            </div>
+
+            <button
+                id="themeToggle"
+                class="theme-toggle"
+                type="button"
+                aria-label="Toggle theme"
+            >
+                ☀
+            </button>
+
+        </header>
+
+
+        <!-- ================= CALCULATOR ================= -->
+
+        <section
+            class="calculator"
+            aria-label="Calculator"
+        >
+
+            <!-- ================= DISPLAY ================= -->
+
+            <div class="display">
+
+                <div
+                    id="expression"
+                    class="expression"
+                >
+                    0
+                </div>
+
+                <div
+                    id="result"
+                    class="result"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- ================= BUTTONS ================= -->
+
+            <div class="calculator-buttons">
+
+                <!-- Row 1 -->
+
+                <button
+                    class="calculator-button function-button"
+                    data-action="clear"
+                    type="button"
+                >
+                    AC
+                </button>
+
+                <button
+                    class="calculator-button function-button"
+                    data-action="delete"
+                    type="button"
+                >
+                    DEL
+                </button>
+
+                <button
+                    class="calculator-button operator-button"
+                    data-value="%"
+                    type="button"
+                >
+                    %
+                </button>
+
+                <button
+                    class="calculator-button operator-button"
+                    data-value="/"
+                    type="button"
+                >
+                    ÷
+                </button>
+
+
+                <!-- Row 2 -->
+
+                <button
+                    class="calculator-button"
+                    data-value="7"
+                    type="button"
+                >
+                    7
+                </button>
+
+                <button
+                    class="calculator-button"
+                    data-value="8"
+                    type="button"
+                >
+                    8
+                </button>
+
+                <button
+                    class="calculator-button"
+                    data-value="9"
+                    type="button"
+                >
+                    9
+                </button>
+
+                <button
+                    class="calculator-button operator-button"
+                    data-value="*"
+                    type="button"
+                >
+                    ×
+                </button>
+
+
+                <!-- Row 3 -->
+
+                <button
+                    class="calculator-button"
+                    data-value="4"
+                    type="button"
+                >
+                    4
+                </button>
+
+                <button
+                    class="calculator-button"
+                    data-value="5"
+                    type="button"
+                >
+                    5
+                </button>
+
+                <button
+                    class="calculator-button"
+                    data-value="6"
+                    type="button"
+                >
+                    6
+                </button>
+
+                <button
+                    class="calculator-button operator-button"
+                    data-value="-"
+                    type="button"
+                >
+                    −
+                </button>
+
+
+                <!-- Row 4 -->
+
+                <button
+                    class="calculator-button"
+                    data-value="1"
+                    type="button"
+                >
+                    1
+                </button>
+
+                <button
+                    class="calculator-button"
+                    data-value="2"
+                    type="button"
+                >
+                    2
+                </button>
+
+                <button
+                    class="calculator-button"
+                    data-value="3"
+                    type="button"
+                >
+                    3
+                </button>
+
+                <button
+                    class="calculator-button operator-button"
+                    data-value="+"
+                    type="button"
+                >
+                    +
+                </button>
+
+
+                <!-- Row 5 -->
+
+                <button
+                    class="calculator-button function-button"
+                    data-action="negative"
+                    type="button"
+                >
+                    +/−
+                </button>
+
+                <button
+                    class="calculator-button"
+                    data-value="0"
+                    type="button"
+                >
+                    0
+                </button>
+
+                <button
+                    class="calculator-button"
+                    data-value="."
+                    type="button"
+                >
+                    .
+                </button>
+
+                <button
+                    class="calculator-button equals-button"
+                    data-action="calculate"
+                    type="button"
+                >
+                    =
+                </button>
+
+            </div>
+
+
+            <!-- ================= ADVANCED OPERATIONS ================= -->
+
+            <div class="advanced-section">
+
+                <button
+                    class="advanced-button"
+                    data-action="sqrt"
+                    type="button"
+                >
+                    √
+                </button>
+
+                <button
+                    class="advanced-button"
+                    data-action="square"
+                    type="button"
+                >
+                    x²
+                </button>
+
+                <button
+                    class="advanced-button"
+                    data-action="reciprocal"
+                    type="button"
+                >
+                    1/x
+                </button>
+
+                <button
+                    class="advanced-button"
+                    data-value="("
+                    type="button"
+                >
+                    (
+                </button>
+
+                <button
+                    class="advanced-button"
+                    data-value=")"
+                    type="button"
+                >
+                    )
+                </button>
+
+            </div>
+
+
+            <!-- ================= STATUS ================= -->
+
+            <div
+                id="statusMessage"
+                class="status-message"
+                aria-live="polite"
+            ></div>
+
+        </section>
+
+
+        <!-- ================= HISTORY ================= -->
+
+        <section
+            id="historyPanel"
+            class="history-panel"
+        >
+
+            <div class="history-header">
+
+                <div>
+                    <h2>Recent Calculations</h2>
+                    <p>Last 10 calculations</p>
+                </div>
+
+                <button
+                    id="clearHistory"
+                    class="clear-history-button"
+                    type="button"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+            <div
+                id="historyList"
+                class="history-list"
+            >
+
+                <div class="empty-history">
+                    No calculations yet
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="js/ui.js"></script>
+
+</body>
+
+</html>
