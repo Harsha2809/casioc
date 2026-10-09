@@ -1,6 +1,8 @@
+
 /* =====================================================
    CASIOC - UI CONTROLLER
    Member 4 - Frontend UI
+   Integrated with Member 3 Calculator, History and Storage
    ===================================================== */
 
 
@@ -8,32 +10,17 @@
    DOM ELEMENTS
    ===================================================== */
 
-const expressionElement =
-    document.getElementById("expression");
+const expressionElement = document.getElementById("expression");
+const resultElement = document.getElementById("result");
+const themeToggle = document.getElementById("themeToggle");
+const statusMessage = document.getElementById("statusMessage");
+const calculator = document.querySelector(".calculator");
 
-const resultElement =
-    document.getElementById("result");
+const calculatorButtons = document.querySelectorAll(".calculator-button");
+const advancedButtons = document.querySelectorAll(".advanced-button");
 
-const themeToggle =
-    document.getElementById("themeToggle");
-
-const statusMessage =
-    document.getElementById("statusMessage");
-
-const calculator =
-    document.querySelector(".calculator");
-
-const calculatorButtons =
-    document.querySelectorAll(".calculator-button");
-
-const advancedButtons =
-    document.querySelectorAll(".advanced-button");
-
-const historyList =
-    document.getElementById("historyList");
-
-const clearHistoryButton =
-    document.getElementById("clearHistory");
+const historyList = document.getElementById("historyList");
+const clearHistoryButton = document.getElementById("clearHistory");
 
 
 /* =====================================================
@@ -41,8 +28,8 @@ const clearHistoryButton =
    ===================================================== */
 
 let currentExpression = "";
-
 let lastResult = "0";
+let calculatorHistory = null;
 
 
 /* =====================================================
@@ -50,45 +37,32 @@ let lastResult = "0";
    ===================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-
     loadTheme();
-
     initializeButtonAnimations();
-
     initializeKeyboard();
-
     initializeHistoryUI();
-
 });
 
 
 /* =====================================================
-   BUTTON ANIMATION
+   BUTTON ANIMATIONS
    ===================================================== */
 
 function initializeButtonAnimations() {
-
     const allButtons = [
         ...calculatorButtons,
         ...advancedButtons
     ];
 
     allButtons.forEach(button => {
-
         button.addEventListener("click", () => {
-
             button.classList.remove("button-click");
 
-            /*
-             * Force browser reflow so the animation
-             * can restart every time the button is clicked.
-             */
+            // Restart the animation on every click.
             void button.offsetWidth;
 
             button.classList.add("button-click");
-
         });
-
     });
 }
 
@@ -98,19 +72,15 @@ function initializeButtonAnimations() {
    ===================================================== */
 
 function updateExpressionDisplay(expression) {
-
-    expressionElement.textContent =
-        expression || "0";
+    expressionElement.textContent = expression || "0";
 }
 
-
 function updateResultDisplay(result) {
-
-    resultElement.textContent =
-        result ?? "0";
+    resultElement.textContent = result ?? "0";
 
     resultElement.classList.remove("result-update");
 
+    // Restart the result animation.
     void resultElement.offsetWidth;
 
     resultElement.classList.add("result-update");
@@ -122,20 +92,14 @@ function updateResultDisplay(result) {
    ===================================================== */
 
 function showStatus(message, isError = false) {
+    if (!statusMessage) return;
 
     statusMessage.textContent = message;
-
     statusMessage.classList.add("visible");
-
-    statusMessage.classList.toggle(
-        "error",
-        isError
-    );
+    statusMessage.classList.toggle("error", isError);
 
     setTimeout(() => {
-
         statusMessage.classList.remove("visible");
-
     }, 2500);
 }
 
@@ -145,8 +109,9 @@ function showStatus(message, isError = false) {
    ===================================================== */
 
 function showError(message = "Invalid expression") {
-
     showStatus(message, true);
+
+    if (!calculator) return;
 
     calculator.classList.remove("error-shake");
 
@@ -155,9 +120,7 @@ function showError(message = "Invalid expression") {
     calculator.classList.add("error-shake");
 
     setTimeout(() => {
-
         calculator.classList.remove("error-shake");
-
     }, 400);
 }
 
@@ -167,114 +130,85 @@ function showError(message = "Invalid expression") {
    ===================================================== */
 
 function loadTheme() {
+    let savedTheme = "light";
 
-    const savedTheme =
-        localStorage.getItem("casioc-theme");
+    try {
+        savedTheme = localStorage.getItem("casioc-theme") || "light";
+    } catch (error) {
+        console.warn("Unable to read saved theme:", error);
+    }
 
-    if (savedTheme === "dark") {
+    const isDark = savedTheme === "dark";
 
-        document.body.classList.add("dark");
+    document.body.classList.toggle("dark", isDark);
 
-        themeToggle.textContent = "☀";
-
-    } else {
-
-        document.body.classList.remove("dark");
-
-        themeToggle.textContent = "☾";
+    if (themeToggle) {
+        themeToggle.textContent = isDark ? "☀" : "☾";
     }
 }
 
-
 function toggleTheme() {
-
     document.body.classList.toggle("dark");
 
-    const isDark =
-        document.body.classList.contains("dark");
+    const isDark = document.body.classList.contains("dark");
 
-    localStorage.setItem(
-        "casioc-theme",
-        isDark ? "dark" : "light"
-    );
+    try {
+        localStorage.setItem(
+            "casioc-theme",
+            isDark ? "dark" : "light"
+        );
+    } catch (error) {
+        console.warn("Unable to save theme:", error);
+    }
 
-    themeToggle.textContent =
-        isDark ? "☀" : "☾";
+    if (themeToggle) {
+        themeToggle.textContent = isDark ? "☀" : "☾";
+    }
+}
+
+if (themeToggle) {
+    themeToggle.addEventListener("click", toggleTheme);
 }
 
 
-themeToggle.addEventListener(
-    "click",
-    toggleTheme
-);
-
-
 /* =====================================================
-   CALCULATOR UI INPUT
+   CALCULATOR BUTTONS
    ===================================================== */
 
 calculatorButtons.forEach(button => {
-
     button.addEventListener("click", () => {
+        const value = button.dataset.value;
+        const action = button.dataset.action;
 
-        const value =
-            button.dataset.value;
-
-        const action =
-            button.dataset.action;
-
-
-        /* Number / operator / decimal */
-
+        // Numbers, operators and decimal point.
         if (value !== undefined) {
-
             addToExpression(value);
-
             return;
         }
 
-
-        /* Clear */
-
+        // Clear all input.
         if (action === "clear") {
-
             clearCalculator();
-
             return;
         }
 
-
-        /* Delete */
-
+        // Delete the last character.
         if (action === "delete") {
-
             deleteLastCharacter();
-
             return;
         }
 
-
-        /* Negative */
-
+        // Change the sign.
         if (action === "negative") {
-
             toggleNegative();
-
             return;
         }
 
-
-        /* Calculate */
-
+        // Calculate the expression.
         if (action === "calculate") {
-
             calculateExpression();
-
-            return;
         }
-
     });
-
 });
 
 
@@ -283,49 +217,29 @@ calculatorButtons.forEach(button => {
    ===================================================== */
 
 advancedButtons.forEach(button => {
-
     button.addEventListener("click", () => {
-
-        const value =
-            button.dataset.value;
-
-        const action =
-            button.dataset.action;
-
+        const value = button.dataset.value;
+        const action = button.dataset.action;
 
         if (value !== undefined) {
-
             addToExpression(value);
-
             return;
         }
-
 
         if (action === "sqrt") {
-
             addUnaryOperation("sqrt");
-
             return;
         }
-
 
         if (action === "square") {
-
             addUnaryOperation("square");
-
             return;
         }
-
 
         if (action === "reciprocal") {
-
             addUnaryOperation("reciprocal");
-
-            return;
         }
-
     });
-
 });
 
 
@@ -334,7 +248,6 @@ advancedButtons.forEach(button => {
    ===================================================== */
 
 function addToExpression(value) {
-
     currentExpression += value;
 
     updateExpressionDisplay(
@@ -348,9 +261,7 @@ function addToExpression(value) {
    ===================================================== */
 
 function deleteLastCharacter() {
-
-    currentExpression =
-        currentExpression.slice(0, -1);
+    currentExpression = currentExpression.slice(0, -1);
 
     updateExpressionDisplay(
         formatExpression(currentExpression)
@@ -359,45 +270,33 @@ function deleteLastCharacter() {
 
 
 /* =====================================================
-   CLEAR
+   CLEAR CALCULATOR DISPLAY
    ===================================================== */
 
 function clearCalculator() {
-
     currentExpression = "";
-
     lastResult = "0";
 
     updateExpressionDisplay("0");
-
     updateResultDisplay("0");
 
-    statusMessage.classList.remove("visible");
+    if (statusMessage) {
+        statusMessage.classList.remove("visible");
+    }
 }
 
 
 /* =====================================================
-   NEGATIVE
+   NEGATIVE SIGN
    ===================================================== */
 
 function toggleNegative() {
-
     if (!currentExpression) {
-
         currentExpression = "-";
-
     } else {
-
-        /*
-         * UI-level sign handling.
-         * Actual mathematical interpretation remains
-         * the responsibility of the calculator engine.
-         */
-
-        currentExpression =
-            currentExpression.startsWith("-")
-                ? currentExpression.substring(1)
-                : "-" + currentExpression;
+        currentExpression = currentExpression.startsWith("-")
+            ? currentExpression.substring(1)
+            : "-" + currentExpression;
     }
 
     updateExpressionDisplay(
@@ -407,46 +306,22 @@ function toggleNegative() {
 
 
 /* =====================================================
-   UNARY OPERATIONS
+   ADVANCED OPERATIONS
    ===================================================== */
 
 function addUnaryOperation(operation) {
-
-    if (!currentExpression) {
-
-        showError(
-            "Enter a number first"
-        );
-
+    if (!currentExpression.trim()) {
+        showError("Enter a number first");
         return;
     }
 
-
-    /*
-     * We send operation syntax to the backend.
-     * The actual calculation is NOT performed here.
-     */
-
     if (operation === "sqrt") {
-
-        currentExpression =
-            `sqrt(${currentExpression})`;
+        currentExpression = `sqrt(${currentExpression})`;
+    } else if (operation === "square") {
+        currentExpression = `(${currentExpression})^2`;
+    } else if (operation === "reciprocal") {
+        currentExpression = `1/(${currentExpression})`;
     }
-
-
-    if (operation === "square") {
-
-        currentExpression =
-            `(${currentExpression})^2`;
-    }
-
-
-    if (operation === "reciprocal") {
-
-        currentExpression =
-            `1/(${currentExpression})`;
-    }
-
 
     updateExpressionDisplay(
         formatExpression(currentExpression)
@@ -459,8 +334,7 @@ function addUnaryOperation(operation) {
    ===================================================== */
 
 function formatExpression(expression) {
-
-    return expression
+    return String(expression)
         .replaceAll("*", "×")
         .replaceAll("/", "÷");
 }
@@ -471,131 +345,82 @@ function formatExpression(expression) {
    ===================================================== */
 
 async function calculateExpression() {
-
     if (!currentExpression.trim()) {
-
-        showError(
-            "Enter an expression"
-        );
-
+        showError("Enter an expression");
         return;
     }
 
-
-    const expressionToSend =
-        currentExpression;
-
+    const expressionToSend = currentExpression;
 
     try {
+        showStatus("Calculating...");
 
-        showStatus(
-            "Calculating..."
-        );
-
-
-        /*
-         * FastAPI endpoint defined by the team.
-         *
-         * Expected request:
-         *
-         * {
-         *     "expression": "25 * 4"
-         * }
-         */
-
-        const response =
-            await fetch(
-                "/api/calculate",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        expression:
-                            expressionToSend
-                    })
-                }
-            );
-
+        const response = await fetch("/api/calculate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                expression: expressionToSend
+            })
+        });
 
         if (!response.ok) {
-
-            throw new Error(
-                `API error: ${response.status}`
-            );
+            throw new Error(`API error: ${response.status}`);
         }
 
+        const data = await response.json();
 
-        const data =
-            await response.json();
-
-
-        /*
-         * Expected response:
-         *
-         * {
-         *     "expression": "25 * 4",
-         *     "result": 100
-         * }
-         */
-
-        if (data.result === undefined) {
-
-            throw new Error(
-                "Invalid response from server"
-            );
+        if (data.result === undefined || data.result === null) {
+            throw new Error("Invalid response from server");
         }
 
+        // Update the calculator display.
+        lastResult = String(data.result);
+        updateResultDisplay(lastResult);
 
-        lastResult =
-            String(data.result);
+        showStatus("Calculation completed");
 
+        // Save the successful calculation using Member 3's storage module.
+        try {
+            if (
+                typeof CalculationStorage !== "undefined" &&
+                typeof CalculationStorage.saveCalculation === "function"
+            ) {
+                CalculationStorage.saveCalculation({
+                    expression: expressionToSend,
+                    result: lastResult,
+                    timestamp: new Date().toISOString()
+                });
 
-        updateResultDisplay(
-            lastResult
-        );
-
-
-        showStatus(
-            "Calculation completed"
-        );
-
-
-        /*
-         * Member 3 can listen for this event
-         * and save the calculation in localStorage.
-         */
-
-        document.dispatchEvent(
-            new CustomEvent(
-                "calculationCompleted",
-                {
-                    detail: {
-                        expression:
-                            expressionToSend,
-
-                        result:
-                            lastResult,
-
-                        timestamp:
-                            new Date().toISOString()
-                    }
+                // Refresh the history display.
+                if (calculatorHistory) {
+                    calculatorHistory.refresh();
                 }
-            )
-        );
+            } else {
+                console.warn(
+                    "CalculationStorage is not available. Check script order."
+                );
+            }
+        } catch (historyError) {
+            // A history-storage problem should not undo a successful calculation.
+            console.error("Unable to save calculation history:", historyError);
+            showStatus("Calculated, but history could not be saved", true);
+        }
 
+        // Notify any other UI component interested in completed calculations.
+        document.dispatchEvent(
+            new CustomEvent("calculationCompleted", {
+                detail: {
+                    expression: expressionToSend,
+                    result: lastResult,
+                    timestamp: new Date().toISOString()
+                }
+            })
+        );
 
     } catch (error) {
-
-        console.error(
-            "Calculation error:",
-            error
-        );
-
+        console.error("Calculation error:", error);
 
         showError(
             "Unable to calculate. Check the backend."
@@ -605,287 +430,123 @@ async function calculateExpression() {
 
 
 /* =====================================================
+   HISTORY INTEGRATION - MEMBER 3
+   ===================================================== */
+
+function initializeHistoryUI() {
+    if (!historyList) {
+        console.warn("History container #historyList was not found.");
+        return;
+    }
+
+    if (
+        typeof CalculationHistory === "undefined" ||
+        typeof CalculationHistory.connectHistory !== "function"
+    ) {
+        console.error(
+            "CalculationHistory is not available. Check index.html script order."
+        );
+
+        showStatus("History module could not be loaded", true);
+        return;
+    }
+
+    try {
+        calculatorHistory = CalculationHistory.connectHistory({
+            container: historyList,
+            clearButton: clearHistoryButton,
+
+            // Selecting a history item restores its expression and result.
+            onSelect(entry) {
+                currentExpression = entry.expression;
+                lastResult = String(entry.result);
+
+                updateExpressionDisplay(
+                    formatExpression(currentExpression)
+                );
+
+                updateResultDisplay(lastResult);
+            }
+        });
+
+        calculatorHistory.refresh();
+
+    } catch (error) {
+        console.error("History initialization error:", error);
+        showStatus("Unable to load calculation history", true);
+    }
+}
+
+
+/* =====================================================
    KEYBOARD SUPPORT
    ===================================================== */
 
 function initializeKeyboard() {
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            const key =
-                event.key;
-
-
-            /* Numbers */
-
-            if (
-                key >= "0" &&
-                key <= "9"
-            ) {
-
-                addToExpression(key);
-
-                return;
-            }
-
-
-            /* Decimal */
-
-            if (key === ".") {
-
-                addToExpression(".");
-
-                return;
-            }
-
-
-            /* Operators */
-
-            if (
-                key === "+" ||
-                key === "-" ||
-                key === "*" ||
-                key === "/" ||
-                key === "%"
-            ) {
-
-                addToExpression(key);
-
-                return;
-            }
-
-
-            /* Brackets */
-
-            if (
-                key === "(" ||
-                key === ")"
-            ) {
-
-                addToExpression(key);
-
-                return;
-            }
-
-
-            /* Enter */
-
-            if (
-                key === "Enter" ||
-                key === "="
-            ) {
-
-                event.preventDefault();
-
-                calculateExpression();
-
-                return;
-            }
-
-
-            /* Backspace */
-
-            if (key === "Backspace") {
-
-                event.preventDefault();
-
-                deleteLastCharacter();
-
-                return;
-            }
-
-
-            /* Escape */
-
-            if (key === "Escape") {
-
-                clearCalculator();
-
-                return;
-            }
-
-        }
-    );
-}
-
-
-/* =====================================================
-   HISTORY UI
-   ===================================================== */
-
-/*
- * Member 3 owns the actual history/localStorage logic.
- *
- * This function only reads the history data and
- * renders it in the UI.
- */
-
-function initializeHistoryUI() {
-
-    renderHistory();
-
-    document.addEventListener(
-        "historyUpdated",
-        renderHistory
-    );
-}
-
-
-function renderHistory() {
-
-    const history =
-        getHistoryFromStorage();
-
-
-    if (!history.length) {
-
-        historyList.innerHTML = `
-            <div class="empty-history">
-                No calculations yet
-            </div>
-        `;
-
-        return;
-    }
-
-
-    historyList.innerHTML = "";
-
-
-    history
-        .slice(0, 10)
-        .forEach(item => {
-
-            const historyElement =
-                document.createElement("div");
-
-            historyElement.className =
-                "history-item";
-
-
-            historyElement.innerHTML = `
-                <div class="history-expression">
-                    ${escapeHtml(
-                        formatExpression(
-                            item.expression
-                        )
-                    )}
-                </div>
-
-                <div class="history-result">
-                    = ${escapeHtml(
-                        String(item.result)
-                    )}
-                </div>
-            `;
-
-
-            historyElement.addEventListener(
-                "click",
-                () => {
-
-                    currentExpression =
-                        item.expression;
-
-                    updateExpressionDisplay(
-                        formatExpression(
-                            currentExpression
-                        )
-                    );
-
-                    updateResultDisplay(
-                        item.result
-                    );
-                }
-            );
-
-
-            historyList.appendChild(
-                historyElement
-            );
-
-        });
-}
-
-
-/* =====================================================
-   READ HISTORY
-   ===================================================== */
-
-function getHistoryFromStorage() {
-
-    try {
-
-        const history =
-            localStorage.getItem(
-                "casioc-history"
-            );
-
-
-        if (!history) {
-
-            return [];
-        }
-
-
-        const parsed =
-            JSON.parse(history);
-
-
-        return Array.isArray(parsed)
-            ? parsed
-            : [];
-
-
-    } catch (error) {
-
-        console.error(
-            "History read error:",
-            error
-        );
-
-        return [];
-    }
-}
-
-
-/* =====================================================
-   CLEAR HISTORY
-   ===================================================== */
-
-clearHistoryButton.addEventListener(
-    "click",
-    () => {
-
-        /*
-         * Member 3 owns history.
-         *
-         * This event tells the history module
-         * that the user requested a clear operation.
-         */
-
-        document.dispatchEvent(
-            new CustomEvent(
-                "clearHistoryRequested"
+    document.addEventListener("keydown", event => {
+        const key = event.key;
+
+        // Ignore keyboard shortcuts while typing in an input field.
+        const target = event.target;
+
+        if (
+            target &&
+            (
+                target.tagName === "INPUT" ||
+                target.tagName === "TEXTAREA" ||
+                target.isContentEditable
             )
-        );
+        ) {
+            return;
+        }
 
-    }
-);
+        // Numbers.
+        if (key >= "0" && key <= "9") {
+            addToExpression(key);
+            return;
+        }
 
+        // Decimal point.
+        if (key === ".") {
+            addToExpression(".");
+            return;
+        }
 
-/* =====================================================
-   HTML ESCAPING
-   ===================================================== */
+        // Mathematical operators.
+        if (
+            key === "+" ||
+            key === "-" ||
+            key === "*" ||
+            key === "/" ||
+            key === "%"
+        ) {
+            addToExpression(key);
+            return;
+        }
 
-function escapeHtml(value) {
+        // Parentheses.
+        if (key === "(" || key === ")") {
+            addToExpression(key);
+            return;
+        }
 
-    return value
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+        // Calculate using Enter or =.
+        if (key === "Enter" || key === "=") {
+            event.preventDefault();
+            calculateExpression();
+            return;
+        }
+
+        // Delete the last character.
+        if (key === "Backspace") {
+            event.preventDefault();
+            deleteLastCharacter();
+            return;
+        }
+
+        // Clear the calculator.
+        if (key === "Escape") {
+            clearCalculator();
+        }
+    });
 }
