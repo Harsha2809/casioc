@@ -1,6 +1,7 @@
 /* =====================================================
    CASIOC - MAIN CALCULATOR STYLES
    Member 4 - Frontend UI
+   Updated: Improved calculation history appearance
    ===================================================== */
 
 
@@ -12,29 +13,17 @@
     padding: 0;
 }
 
-
 html {
     scroll-behavior: smooth;
 }
 
-
 body {
     min-height: 100vh;
-
-    font-family:
-        "Segoe UI",
-        Arial,
-        sans-serif;
-
+    font-family: "Segoe UI", Arial, sans-serif;
     background: var(--page-background);
-
     color: var(--text-primary);
-
-    transition:
-        background-color 0.3s ease,
-        color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
-
 
 button {
     font-family: inherit;
@@ -44,15 +33,10 @@ button {
 /* ================= APP ================= */
 
 .app-container {
-
     width: min(440px, 94%);
-
     margin: 40px auto;
-
     display: flex;
-
     flex-direction: column;
-
     gap: 20px;
 }
 
@@ -60,70 +44,41 @@ button {
 /* ================= HEADER ================= */
 
 .calculator-header {
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     padding: 0 5px;
 }
 
-
 .brand {
-
     display: flex;
-
     align-items: center;
-
     gap: 12px;
 }
 
-
 .brand-icon {
-
     width: 45px;
-
     height: 45px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     border-radius: 14px;
-
     background: var(--accent);
-
     color: white;
-
     font-size: 23px;
-
     font-weight: 800;
-
-    box-shadow:
-        0 7px 15px var(--accent-shadow);
+    box-shadow: 0 7px 15px var(--accent-shadow);
 }
-
 
 .brand h1 {
-
     font-size: 25px;
-
     letter-spacing: 2px;
-
     font-weight: 800;
 }
 
-
 .brand p {
-
     margin-top: 2px;
-
     font-size: 12px;
-
     color: var(--text-secondary);
 }
 
@@ -131,43 +86,25 @@ button {
 /* ================= THEME BUTTON ================= */
 
 .theme-toggle {
-
     width: 45px;
-
     height: 45px;
-
     border: none;
-
     border-radius: 14px;
-
     background: var(--surface);
-
     color: var(--text-primary);
-
     cursor: pointer;
-
     font-size: 19px;
-
     box-shadow: var(--soft-shadow);
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-
 .theme-toggle:hover {
-
     transform: translateY(-2px);
-
     box-shadow: var(--hover-shadow);
 }
 
-
 .theme-toggle:active {
-
     transform: translateY(2px);
-
     box-shadow: var(--pressed-shadow);
 }
 
@@ -175,19 +112,12 @@ button {
 /* ================= CALCULATOR ================= */
 
 .calculator {
-
     width: 100%;
-
     padding: 22px;
-
     border-radius: 28px;
-
     background: var(--calculator-background);
-
     box-shadow: var(--calculator-shadow);
-
     border: 1px solid var(--calculator-border);
-
     animation: calculatorOpen 0.5s ease-out;
 }
 
@@ -195,76 +125,42 @@ button {
 /* ================= DISPLAY ================= */
 
 .display {
-
     width: 100%;
-
     min-height: 135px;
-
     margin-bottom: 20px;
-
     padding: 20px;
-
     display: flex;
-
     flex-direction: column;
-
     align-items: flex-end;
-
     justify-content: flex-end;
-
     overflow: hidden;
-
     border-radius: 21px;
-
     background: var(--display-background);
-
     color: var(--display-text);
-
     box-shadow: var(--display-shadow);
 }
 
-
 .expression {
-
     width: 100%;
-
     min-height: 25px;
-
     overflow: hidden;
-
     text-align: right;
-
     white-space: nowrap;
-
     text-overflow: ellipsis;
-
     font-size: 18px;
-
     color: var(--display-secondary);
-
 }
 
-
 .result {
-
     width: 100%;
-
     margin-top: 7px;
-
     overflow: hidden;
-
     text-align: right;
-
     white-space: nowrap;
-
     text-overflow: ellipsis;
-
     font-size: 43px;
-
     line-height: 1.1;
-
     font-weight: 700;
-
     color: var(--display-text);
 }
 
@@ -272,12 +168,8 @@ button {
 /* ================= BUTTON GRID ================= */
 
 .calculator-buttons {
-
     display: grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
+    grid-template-columns: repeat(4, 1fr);
     gap: 12px;
 }
 
@@ -285,48 +177,28 @@ button {
 /* ================= NORMAL BUTTON ================= */
 
 .calculator-button {
-
     height: 65px;
-
     border: none;
-
     border-radius: 17px;
-
     background: var(--button-background);
-
     color: var(--button-text);
-
     font-size: 21px;
-
     font-weight: 600;
-
     cursor: pointer;
-
     user-select: none;
-
     -webkit-tap-highlight-color: transparent;
-
     box-shadow: var(--button-shadow);
-
-    transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease,
+    transition: transform 0.15s ease, box-shadow 0.15s ease,
         background-color 0.2s ease;
 }
 
-
 .calculator-button:hover {
-
     transform: translateY(-3px);
-
     box-shadow: var(--button-hover-shadow);
 }
 
-
 .calculator-button:active {
-
     transform: translateY(3px);
-
     box-shadow: var(--button-pressed-shadow);
 }
 
@@ -334,9 +206,7 @@ button {
 /* ================= FUNCTION BUTTON ================= */
 
 .function-button {
-
     color: var(--function-text);
-
     background: var(--function-background);
 }
 
@@ -344,11 +214,8 @@ button {
 /* ================= OPERATOR ================= */
 
 .operator-button {
-
     color: var(--accent);
-
     background: var(--operator-background);
-
     font-size: 23px;
 }
 
@@ -356,80 +223,47 @@ button {
 /* ================= EQUALS ================= */
 
 .equals-button {
-
     background: var(--accent);
-
     color: white;
-
     font-size: 25px;
-
-    box-shadow:
-        0 8px 16px var(--accent-shadow);
+    box-shadow: 0 8px 16px var(--accent-shadow);
 }
 
-
 .equals-button:hover {
-
     background: var(--accent-hover);
-
-    box-shadow:
-        0 12px 22px var(--accent-shadow);
+    box-shadow: 0 12px 22px var(--accent-shadow);
 }
 
 
 /* ================= ADVANCED OPERATIONS ================= */
 
 .advanced-section {
-
     display: grid;
-
-    grid-template-columns:
-        repeat(5, 1fr);
-
+    grid-template-columns: repeat(5, 1fr);
     gap: 9px;
-
     margin-top: 13px;
 }
 
-
 .advanced-button {
-
     height: 42px;
-
     border: none;
-
     border-radius: 12px;
-
     background: var(--advanced-background);
-
     color: var(--text-primary);
-
     font-size: 14px;
-
     font-weight: 600;
-
     cursor: pointer;
-
     box-shadow: var(--small-shadow);
-
-    transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-
 .advanced-button:hover {
-
     transform: translateY(-2px);
-
     box-shadow: var(--small-hover-shadow);
 }
 
-
 .advanced-button:active {
-
     transform: translateY(2px);
-
     box-shadow: var(--small-pressed-shadow);
 }
 
@@ -437,168 +271,275 @@ button {
 /* ================= STATUS ================= */
 
 .status-message {
-
     min-height: 22px;
-
     margin-top: 12px;
-
     text-align: center;
-
     font-size: 13px;
-
     color: var(--text-secondary);
-
     opacity: 0;
-
     transition: opacity 0.2s ease;
 }
 
-
 .status-message.visible {
-
     opacity: 1;
 }
 
-
 .status-message.error {
-
     color: var(--error);
 }
 
 
-/* ================= HISTORY ================= */
+/* ================= HISTORY PANEL ================= */
 
 .history-panel {
-
-    padding: 20px;
-
-    border-radius: 22px;
-
+    width: 100%;
+    min-width: 0;
+    padding: 22px;
+    border-radius: 24px;
     background: var(--surface);
-
     box-shadow: var(--soft-shadow);
-
     border: 1px solid var(--calculator-border);
+    overflow: hidden;
 }
-
 
 .history-header {
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
-    gap: 15px;
+    gap: 12px;
 }
-
 
 .history-header h2 {
-
-    font-size: 17px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
 }
 
-
 .history-header p {
-
-    margin-top: 4px;
-
+    margin-top: 5px;
     font-size: 12px;
-
     color: var(--text-secondary);
 }
 
-
 .clear-history-button {
-
-    border: none;
-
+    flex-shrink: 0;
+    padding: 8px 12px;
+    border: 1px solid transparent;
+    border-radius: 10px;
     background: transparent;
-
     color: var(--accent);
-
-    font-size: 13px;
-
-    font-weight: 600;
-
+    font-size: 12px;
+    font-weight: 700;
     cursor: pointer;
+    transition: background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.clear-history-button:hover {
+    background: var(--operator-background);
+    border-color: var(--calculator-border);
+}
+
+.clear-history-button:active {
+    transform: scale(0.96);
 }
 
 
 /* ================= HISTORY LIST ================= */
 
 .history-list {
-
     display: flex;
-
     flex-direction: column;
-
-    gap: 8px;
-
-    margin-top: 15px;
+    gap: 10px;
+    margin-top: 18px;
+    min-width: 0;
 }
 
-
+/* Supports the existing .history-item layout */
 .history-item {
-
-    padding: 12px 14px;
-
-    border-radius: 12px;
-
+    position: relative;
+    min-width: 0;
+    padding: 14px 15px;
+    border: 1px solid var(--calculator-border);
+    border-radius: 15px;
     background: var(--history-item-background);
-
     cursor: pointer;
-
-    transition:
-        transform 0.15s ease,
-        background-color 0.2s ease;
+    overflow-wrap: anywhere;
+    transition: transform 0.18s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
-
 
 .history-item:hover {
-
-    transform: translateX(3px);
-
+    transform: translateY(-2px);
     background: var(--history-item-hover);
+    border-color: var(--accent);
+    box-shadow: var(--small-shadow);
 }
-
 
 .history-expression {
-
     font-size: 13px;
-
+    line-height: 1.5;
     color: var(--text-secondary);
+    overflow-wrap: anywhere;
 }
-
 
 .history-result {
-
-    margin-top: 3px;
-
-    font-size: 17px;
-
+    margin-top: 5px;
+    font-size: 19px;
+    line-height: 1.4;
     font-weight: 700;
+    color: var(--text-primary);
+    overflow-wrap: anywhere;
 }
 
+/* History created by Member 3's history.js */
+.history-list li {
+    list-style: none;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 13px;
+    border: 1px solid var(--calculator-border);
+    border-radius: 15px;
+    background: var(--history-item-background);
+    transition: border-color 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
 
-.empty-history {
+.history-list li:hover {
+    border-color: var(--accent);
+    background: var(--history-item-hover);
+    box-shadow: var(--small-shadow);
+}
 
-    padding: 18px;
-
-    text-align: center;
-
+/* Expression/result selection button generated by history.js */
+.history-list li [data-history-select] {
+    flex: 1 1 150px;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 2px 0;
+    border: none;
+    background: transparent;
+    color: var(--text-primary);
+    text-align: left;
+    font-family: inherit;
     font-size: 13px;
+    cursor: pointer;
+}
 
+.history-list li [data-history-select]:hover {
+    color: var(--accent);
+}
+
+.history-list li [data-history-select]:focus-visible,
+.history-list li [data-history-delete]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 5px;
+}
+
+/* Timestamp */
+.history-list li time {
+    flex: 1 1 100%;
+    display: block;
+    padding-top: 5px;
+    border-top: 1px solid var(--calculator-border);
     color: var(--text-secondary);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* Delete button generated by history.js */
+.history-list li [data-history-delete] {
+    flex: 0 0 auto;
+    padding: 7px 10px;
+    border: 1px solid var(--calculator-border);
+    border-radius: 9px;
+    background: var(--surface);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.history-list li [data-history-delete]:hover {
+    border-color: var(--error);
+    background: var(--error);
+    color: #ffffff;
+}
+
+/* Empty history message */
+.empty-history {
+    padding: 25px 15px;
+    border: 1px dashed var(--calculator-border);
+    border-radius: 14px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    background: var(--history-item-background);
 }
 
 
 /* ================= ACCESSIBILITY ================= */
 
 button:focus-visible {
-
     outline: 3px solid var(--accent);
-
     outline-offset: 3px;
+}
+
+
+/* ================= RESPONSIVE HISTORY ================= */
+
+@media (max-width: 480px) {
+    .app-container {
+        width: min(440px, 94%);
+        margin: 20px auto;
+        gap: 16px;
+    }
+
+    .calculator {
+        padding: 16px;
+        border-radius: 23px;
+    }
+
+    .history-panel {
+        padding: 17px;
+        border-radius: 20px;
+    }
+
+    .history-header h2 {
+        font-size: 16px;
+    }
+
+    .history-list {
+        gap: 8px;
+    }
+
+    .history-list li {
+        padding: 11px;
+        gap: 7px;
+    }
+
+    .history-list li [data-history-select] {
+        flex-basis: 120px;
+        font-size: 12px;
+    }
+
+    .history-list li [data-history-delete] {
+        padding: 7px 8px;
+    }
 }
