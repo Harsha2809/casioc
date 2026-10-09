@@ -1,0 +1,192 @@
+/* =====================================================
+   CASIOC - ANIMATIONS
+   ===================================================== */
+
+
+/* ================= APPLICATION OPEN ================= */
+
+@keyframes calculatorOpen {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            scale(0.88)
+            translateY(25px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            scale(1)
+            translateY(0);
+    }
+}
+
+
+/* ================= BUTTON CLICK ================= */
+
+@keyframes buttonClick {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0.94);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+.button-click {
+
+    animation:
+        buttonClick 0.15s ease;
+}
+
+
+/* ================= RESULT UPDATE ================= */
+
+@keyframes resultUpdate {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(8px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+.result-update {
+
+    animation:
+        resultUpdate 0.25s ease;
+}
+
+
+/* ================= ERROR SHAKE ================= */
+
+@keyframes errorShake {
+
+    0%,
+    100% {
+
+        transform:
+            translateX(0);
+    }
+
+    20% {
+
+        transform:
+            translateX(-8px);
+    }
+
+    40% {
+
+        transform:
+            translateX(8px);
+    }
+
+    60% {
+
+        transform:
+            translateX(-6px);
+    }
+
+    80% {
+
+        transform:
+            translateX(6px);
+    }
+}
+
+
+.error-shake {
+
+    animation:
+        errorShake 0.35s ease;
+}
+
+
+/* ================= HISTORY APPEAR ================= */
+
+@keyframes historyAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(5px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+.history-item {
+
+    animation:
+        historyAppear 0.2s ease;
+}
+
+
+/* ================= THEME TRANSITION ================= */
+
+body,
+.calculator,
+.display,
+.calculator-button,
+.advanced-button,
+.history-panel,
+.history-item,
+.theme-toggle {
+
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+/* ================= REDUCED MOTION ================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration: 0.01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.01ms !important;
+
+        scroll-behavior: auto !important;
+    }
+}

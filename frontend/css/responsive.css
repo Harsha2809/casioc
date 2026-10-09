@@ -1,0 +1,252 @@
+/* =====================================================
+   CASIOC - RESPONSIVE DESIGN
+   ===================================================== */
+
+
+/* ================= TABLET ================= */
+
+@media (max-width: 700px) {
+
+    .app-container {
+
+        width: min(430px, 94%);
+
+        margin: 25px auto;
+    }
+
+    .calculator {
+
+        padding: 19px;
+
+        border-radius: 24px;
+    }
+
+    .calculator-button {
+
+        height: 62px;
+
+        font-size: 20px;
+    }
+
+    .result {
+
+        font-size: 39px;
+    }
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 500px) {
+
+    .app-container {
+
+        width: 94%;
+
+        margin: 15px auto;
+
+        gap: 14px;
+    }
+
+
+    .calculator-header {
+
+        padding: 0 2px;
+    }
+
+
+    .brand-icon {
+
+        width: 40px;
+
+        height: 40px;
+
+        border-radius: 12px;
+
+        font-size: 20px;
+    }
+
+
+    .brand h1 {
+
+        font-size: 21px;
+    }
+
+
+    .brand p {
+
+        font-size: 10px;
+    }
+
+
+    .theme-toggle {
+
+        width: 40px;
+
+        height: 40px;
+
+        border-radius: 12px;
+    }
+
+
+    .calculator {
+
+        padding: 15px;
+
+        border-radius: 22px;
+    }
+
+
+    .display {
+
+        min-height: 115px;
+
+        padding: 17px;
+
+        border-radius: 17px;
+    }
+
+
+    .expression {
+
+        font-size: 15px;
+    }
+
+
+    .result {
+
+        font-size: 34px;
+    }
+
+
+    .calculator-buttons {
+
+        gap: 9px;
+    }
+
+
+    .calculator-button {
+
+        height: 57px;
+
+        border-radius: 14px;
+
+        font-size: 18px;
+    }
+
+
+    .operator-button,
+    .equals-button {
+
+        font-size: 21px;
+    }
+
+
+    .advanced-section {
+
+        gap: 7px;
+
+        margin-top: 10px;
+    }
+
+
+    .advanced-button {
+
+        height: 38px;
+
+        border-radius: 10px;
+
+        font-size: 12px;
+    }
+
+
+    .history-panel {
+
+        padding: 16px;
+
+        border-radius: 18px;
+    }
+}
+
+
+/* ================= SMALL MOBILE ================= */
+
+@media (max-width: 360px) {
+
+    .app-container {
+
+        width: 96%;
+    }
+
+
+    .calculator {
+
+        padding: 12px;
+    }
+
+
+    .calculator-buttons {
+
+        gap: 7px;
+    }
+
+
+    .calculator-button {
+
+        height: 53px;
+
+        border-radius: 12px;
+
+        font-size: 17px;
+    }
+
+
+    .advanced-button {
+
+        height: 35px;
+
+        font-size: 11px;
+    }
+
+
+    .result {
+
+        font-size: 30px;
+    }
+}
+
+
+/* ================= LANDSCAPE MOBILE ================= */
+
+@media (max-height: 600px) and (orientation: landscape) {
+
+    .app-container {
+
+        margin: 15px auto;
+
+    }
+
+
+    .calculator {
+
+        padding: 15px;
+    }
+
+
+    .display {
+
+        min-height: 90px;
+    }
+
+
+    .calculator-button {
+
+        height: 48px;
+    }
+
+
+    .advanced-button {
+
+        height: 35px;
+    }
+}
