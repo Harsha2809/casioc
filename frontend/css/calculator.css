@@ -140,15 +140,25 @@ button {
     box-shadow: var(--display-shadow);
 }
 
+/* Expression input with cursor positioning */
 .expression {
     width: 100%;
-    min-height: 25px;
-    overflow: hidden;
-    text-align: right;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+    padding: 0;
+    margin: 0;
+
+    cursor: text;
+    user-select: text;
+    -webkit-user-select: text;
+
+    overflow-x: auto;
     white-space: nowrap;
-    text-overflow: ellipsis;
-    font-size: 18px;
-    color: var(--display-secondary);
 }
 
 .result {

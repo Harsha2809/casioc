@@ -1,3 +1,4 @@
+import math
 from fastapi import APIRouter, HTTPException
 
 from app.schemas.calculator import (
@@ -12,22 +13,25 @@ router = APIRouter(
 )
 
 
+
+
 def calculate_expression(expression: str) -> float:
-    """
-    Temporary calculator implementation.
-
-    This will later be replaced by Member 1's
-    calculator engine.
-    """
-
     try:
         result = eval(
             expression,
-            {"__builtins__": {}},
+            {
+                "__builtins__": {},
+                "sqrt": math.sqrt,
+                "abs": abs,
+                "factorial": math.factorial,
+            },
             {},
         )
 
         if not isinstance(result, (int, float)):
+            raise ValueError("Invalid result")
+
+        if not math.isfinite(result):
             raise ValueError("Invalid result")
 
         return float(result)
@@ -61,6 +65,7 @@ async def calculate(
     )
 
     return CalculationResponse(
+
         expression=request.expression,
         result=result,
     )

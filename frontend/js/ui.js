@@ -1,4 +1,3 @@
-
 /* =====================================================
    CASIOC - UI CONTROLLER
    Member 4 - Frontend UI
@@ -30,6 +29,7 @@ const clearHistoryButton = document.getElementById("clearHistory");
 let currentExpression = "";
 let lastResult = "0";
 let calculatorHistory = null;
+let cursorPosition = 0;
 
 
 /* =====================================================
@@ -39,9 +39,66 @@ let calculatorHistory = null;
 document.addEventListener("DOMContentLoaded", () => {
     loadTheme();
     initializeButtonAnimations();
+    initializeExpressionCursor();
     initializeKeyboard();
     initializeHistoryUI();
 });
+
+
+/* =====================================================
+   CURSOR POSITION MANAGEMENT
+   ===================================================== */
+
+function getCursorPosition() {
+    if (
+        expressionElement &&
+        typeof expressionElement.selectionStart === "number"
+    ) {
+        return expressionElement.selectionStart;
+    }
+
+    return cursorPosition;
+}
+
+
+function setCursorPosition(position) {
+    cursorPosition = Math.max(
+        0,
+        Math.min(position, currentExpression.length)
+    );
+
+    if (!expressionElement) return;
+
+    expressionElement.focus();
+
+    expressionElement.setSelectionRange(
+        cursorPosition,
+        cursorPosition
+    );
+}
+
+
+function initializeExpressionCursor() {
+    if (!expressionElement) return;
+
+    // Track the cursor when the user clicks the expression.
+    expressionElement.addEventListener("click", () => {
+        cursorPosition = getCursorPosition();
+    });
+
+    // Track cursor changes and text selection.
+    expressionElement.addEventListener("select", () => {
+        cursorPosition = getCursorPosition();
+    });
+
+    expressionElement.addEventListener("keyup", () => {
+        cursorPosition = getCursorPosition();
+    });
+
+    expressionElement.addEventListener("focus", () => {
+        cursorPosition = getCursorPosition();
+    });
+}
 
 
 /* =====================================================
@@ -58,7 +115,7 @@ function initializeButtonAnimations() {
         button.addEventListener("click", () => {
             button.classList.remove("button-click");
 
-            // Restart the animation on every click.
+            // Restart animation on every click.
             void button.offsetWidth;
 
             button.classList.add("button-click");
@@ -72,15 +129,32 @@ function initializeButtonAnimations() {
    ===================================================== */
 
 function updateExpressionDisplay(expression) {
-    expressionElement.textContent = expression || "0";
+    if (!expressionElement) return;
+
+    // An input element uses .value, not .textContent.
+    expressionElement.value = expression || "0";
+
+    cursorPosition = Math.max(
+        0,
+        Math.min(cursorPosition, currentExpression.length)
+    );
+
+    // Restore the intended caret position after updating the value.
+    expressionElement.setSelectionRange(
+        cursorPosition,
+        cursorPosition
+    );
 }
 
+
 function updateResultDisplay(result) {
+    if (!resultElement) return;
+
     resultElement.textContent = result ?? "0";
 
     resultElement.classList.remove("result-update");
 
-    // Restart the result animation.
+    // Restart result animation.
     void resultElement.offsetWidth;
 
     resultElement.classList.add("result-update");
@@ -133,7 +207,8 @@ function loadTheme() {
     let savedTheme = "light";
 
     try {
-        savedTheme = localStorage.getItem("casioc-theme") || "light";
+        savedTheme =
+            localStorage.getItem("casioc-theme") || "light";
     } catch (error) {
         console.warn("Unable to read saved theme:", error);
     }
@@ -147,10 +222,12 @@ function loadTheme() {
     }
 }
 
+
 function toggleTheme() {
     document.body.classList.toggle("dark");
 
-    const isDark = document.body.classList.contains("dark");
+    const isDark =
+        document.body.classList.contains("dark");
 
     try {
         localStorage.setItem(
@@ -165,6 +242,7 @@ function toggleTheme() {
         themeToggle.textContent = isDark ? "☀" : "☾";
     }
 }
+
 
 if (themeToggle) {
     themeToggle.addEventListener("click", toggleTheme);
@@ -192,19 +270,19 @@ calculatorButtons.forEach(button => {
             return;
         }
 
-        // Delete the last character.
+        // Delete at the cursor.
         if (action === "delete") {
             deleteLastCharacter();
             return;
         }
 
-        // Change the sign.
+        // Change sign.
         if (action === "negative") {
             toggleNegative();
             return;
         }
 
-        // Calculate the expression.
+        // Calculate expression.
         if (action === "calculate") {
             calculateExpression();
         }
@@ -244,38 +322,84 @@ advancedButtons.forEach(button => {
 
 
 /* =====================================================
-   ADD INPUT
+   ADD INPUT AT CURSOR POSITION
    ===================================================== */
 
 function addToExpression(value) {
-    currentExpression += value;
+    const start = getCursorPosition();
+
+    const end =
+        expressionElement &&
+        typeof expressionElement.selectionEnd === "number"
+            ? expressionElement.selectionEnd
+            : start;
+
+    // Replace selected text, or insert at the cursor.
+    currentExpression =
+        currentExpression.slice(0, start) +
+        value +
+        currentExpression.slice(end);
+
+    cursorPosition = start + value.length;
 
     updateExpressionDisplay(
         formatExpression(currentExpression)
     );
+
+    setCursorPosition(cursorPosition);
 }
 
 
 /* =====================================================
-   DELETE
+   DELETE AT CURSOR POSITION
    ===================================================== */
 
 function deleteLastCharacter() {
-    currentExpression = currentExpression.slice(0, -1);
+    if (!currentExpression.length) return;
+
+    const start = getCursorPosition();
+
+    const end =
+        expressionElement &&
+        typeof expressionElement.selectionEnd === "number"
+            ? expressionElement.selectionEnd
+            : start;
+
+    // If a range is selected, delete the selection.
+    if (start !== end) {
+        currentExpression =
+            currentExpression.slice(0, start) +
+            currentExpression.slice(end);
+
+        cursorPosition = start;
+    } else {
+        // Otherwise, delete the character before the cursor.
+        if (start === 0) return;
+
+        currentExpression =
+            currentExpression.slice(0, start - 1) +
+            currentExpression.slice(start);
+
+        cursorPosition = start - 1;
+    }
 
     updateExpressionDisplay(
         formatExpression(currentExpression)
     );
+
+    // Keep the caret exactly at the deletion position.
+    setCursorPosition(cursorPosition);
 }
 
 
 /* =====================================================
-   CLEAR CALCULATOR DISPLAY
+   CLEAR CALCULATOR
    ===================================================== */
 
 function clearCalculator() {
     currentExpression = "";
     lastResult = "0";
+    cursorPosition = 0;
 
     updateExpressionDisplay("0");
     updateResultDisplay("0");
@@ -283,6 +407,8 @@ function clearCalculator() {
     if (statusMessage) {
         statusMessage.classList.remove("visible");
     }
+
+    setCursorPosition(0);
 }
 
 
@@ -299,9 +425,13 @@ function toggleNegative() {
             : "-" + currentExpression;
     }
 
+    cursorPosition = currentExpression.length;
+
     updateExpressionDisplay(
         formatExpression(currentExpression)
     );
+
+    setCursorPosition(cursorPosition);
 }
 
 
@@ -310,22 +440,25 @@ function toggleNegative() {
    ===================================================== */
 
 function addUnaryOperation(operation) {
-    if (!currentExpression.trim()) {
-        showError("Enter a number first");
-        return;
+    if (!currentExpression) return;
+
+    switch (operation) {
+        case "sqrt":
+            currentExpression = `sqrt(${currentExpression})`;
+            break;
+
+        case "square":
+            currentExpression = `(${currentExpression})**2`;
+            break;
+
+        case "reciprocal":
+            currentExpression = `1/(${currentExpression})`;
+            break;
     }
 
-    if (operation === "sqrt") {
-        currentExpression = `sqrt(${currentExpression})`;
-    } else if (operation === "square") {
-        currentExpression = `(${currentExpression})^2`;
-    } else if (operation === "reciprocal") {
-        currentExpression = `1/(${currentExpression})`;
-    }
-
-    updateExpressionDisplay(
-        formatExpression(currentExpression)
-    );
+    cursorPosition = currentExpression.length;
+    updateExpressionDisplay(currentExpression);
+    setCursorPosition(cursorPosition);
 }
 
 
@@ -355,33 +488,50 @@ async function calculateExpression() {
     try {
         showStatus("Calculating...");
 
-        const response = await fetch("http://127.0.0.1:8000/api/calculate", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                expression: expressionToSend
-            })
-        });
+        const response = await fetch(
+            "http://127.0.0.1:8000/api/calculate",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    expression: expressionToSend
+                })
+            }
+        );
 
         if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
+            let detail = "";
+
+            try {
+                const errorData = await response.json();
+                detail = errorData.detail || "";
+            } catch (_) {
+                // Use the generic API error if the response isn't JSON.
+            }
+
+            throw new Error(
+                detail || `API error: ${response.status}`
+            );
         }
 
         const data = await response.json();
 
-        if (data.result === undefined || data.result === null) {
+        if (
+            data.result === undefined ||
+            data.result === null
+        ) {
             throw new Error("Invalid response from server");
         }
 
-        // Update the calculator display.
         lastResult = String(data.result);
+
         updateResultDisplay(lastResult);
 
         showStatus("Calculation completed");
 
-        // Save the successful calculation using Member 3's storage module.
+        // Save successful calculation using Member 3's storage module.
         try {
             if (
                 typeof CalculationStorage !== "undefined" &&
@@ -393,7 +543,6 @@ async function calculateExpression() {
                     timestamp: new Date().toISOString()
                 });
 
-                // Refresh the history display.
                 if (calculatorHistory) {
                     calculatorHistory.refresh();
                 }
@@ -403,12 +552,18 @@ async function calculateExpression() {
                 );
             }
         } catch (historyError) {
-            // A history-storage problem should not undo a successful calculation.
-            console.error("Unable to save calculation history:", historyError);
-            showStatus("Calculated, but history could not be saved", true);
+            console.error(
+                "Unable to save calculation history:",
+                historyError
+            );
+
+            showStatus(
+                "Calculated, but history could not be saved",
+                true
+            );
         }
 
-        // Notify any other UI component interested in completed calculations.
+        // Notify other UI components.
         document.dispatchEvent(
             new CustomEvent("calculationCompleted", {
                 detail: {
@@ -423,6 +578,7 @@ async function calculateExpression() {
         console.error("Calculation error:", error);
 
         showError(
+            error.message ||
             "Unable to calculate. Check the backend."
         );
     }
@@ -435,7 +591,9 @@ async function calculateExpression() {
 
 function initializeHistoryUI() {
     if (!historyList) {
-        console.warn("History container #historyList was not found.");
+        console.warn(
+            "History container #historyList was not found."
+        );
         return;
     }
 
@@ -447,33 +605,50 @@ function initializeHistoryUI() {
             "CalculationHistory is not available. Check index.html script order."
         );
 
-        showStatus("History module could not be loaded", true);
+        showStatus(
+            "History module could not be loaded",
+            true
+        );
+
         return;
     }
 
     try {
-        calculatorHistory = CalculationHistory.connectHistory({
-            container: historyList,
-            clearButton: clearHistoryButton,
+        calculatorHistory =
+            CalculationHistory.connectHistory({
+                container: historyList,
+                clearButton: clearHistoryButton,
 
-            // Selecting a history item restores its expression and result.
-            onSelect(entry) {
-                currentExpression = entry.expression;
-                lastResult = String(entry.result);
+                // Restore selected calculation.
+                onSelect(entry) {
+                    currentExpression = entry.expression;
+                    lastResult = String(entry.result);
 
-                updateExpressionDisplay(
-                    formatExpression(currentExpression)
-                );
+                    cursorPosition =
+                        currentExpression.length;
 
-                updateResultDisplay(lastResult);
-            }
-        });
+                    updateExpressionDisplay(
+                        formatExpression(currentExpression)
+                    );
+
+                    updateResultDisplay(lastResult);
+
+                    setCursorPosition(cursorPosition);
+                }
+            });
 
         calculatorHistory.refresh();
 
     } catch (error) {
-        console.error("History initialization error:", error);
-        showStatus("Unable to load calculation history", true);
+        console.error(
+            "History initialization error:",
+            error
+        );
+
+        showStatus(
+            "Unable to load calculation history",
+            true
+        );
     }
 }
 
@@ -485,14 +660,16 @@ function initializeHistoryUI() {
 function initializeKeyboard() {
     document.addEventListener("keydown", event => {
         const key = event.key;
-
-        // Ignore keyboard shortcuts while typing in an input field.
         const target = event.target;
 
+        // Ignore unrelated input fields.
         if (
             target &&
             (
-                target.tagName === "INPUT" ||
+                (
+                    target.tagName === "INPUT" &&
+                    target !== expressionElement
+                ) ||
                 target.tagName === "TEXTAREA" ||
                 target.isContentEditable
             )
@@ -500,14 +677,21 @@ function initializeKeyboard() {
             return;
         }
 
+        // Synchronize cursor position when expression input is focused.
+        if (target === expressionElement) {
+            cursorPosition = getCursorPosition();
+        }
+
         // Numbers.
         if (key >= "0" && key <= "9") {
+            event.preventDefault();
             addToExpression(key);
             return;
         }
 
         // Decimal point.
         if (key === ".") {
+            event.preventDefault();
             addToExpression(".");
             return;
         }
@@ -518,35 +702,76 @@ function initializeKeyboard() {
             key === "-" ||
             key === "*" ||
             key === "/" ||
-            key === "%"
+            key === "%" ||
+            key === "^"
         ) {
+            event.preventDefault();
             addToExpression(key);
             return;
         }
 
         // Parentheses.
         if (key === "(" || key === ")") {
+            event.preventDefault();
             addToExpression(key);
             return;
         }
 
-        // Calculate using Enter or =.
+        // Calculate.
         if (key === "Enter" || key === "=") {
             event.preventDefault();
             calculateExpression();
             return;
         }
 
-        // Delete the last character.
+        // Backspace deletes before the cursor.
         if (key === "Backspace") {
             event.preventDefault();
             deleteLastCharacter();
             return;
         }
 
-        // Clear the calculator.
+        // Delete removes the character after the cursor.
+        if (key === "Delete") {
+            event.preventDefault();
+
+            const start = getCursorPosition();
+
+            const end =
+                expressionElement &&
+                typeof expressionElement.selectionEnd === "number"
+                    ? expressionElement.selectionEnd
+                    : start;
+
+            if (start !== end) {
+                currentExpression =
+                    currentExpression.slice(0, start) +
+                    currentExpression.slice(end);
+
+                cursorPosition = start;
+            } else if (start < currentExpression.length) {
+                currentExpression =
+                    currentExpression.slice(0, start) +
+                    currentExpression.slice(start + 1);
+
+                cursorPosition = start;
+            }
+
+            updateExpressionDisplay(
+                formatExpression(currentExpression)
+            );
+
+            setCursorPosition(cursorPosition);
+            return;
+        }
+
+        // Clear calculator.
         if (key === "Escape") {
+            event.preventDefault();
             clearCalculator();
         }
+
+        // Arrow keys are handled by the browser's native input caret.
+        // Their updated position is read when the next action occurs.
     });
 }
