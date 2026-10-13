@@ -489,7 +489,7 @@ async function calculateExpression() {
         showStatus("Calculating...");
 
         const response = await fetch(
-            "http://127.0.0.1:8000/api/calculate",
+            "https://casioc-calculator-api-d4bcchdpf9h2f6ef.southindia-01.azurewebsites.net/api/calculate",
             {
                 method: "POST",
                 headers: {
