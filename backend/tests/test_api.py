@@ -112,3 +112,68 @@ def test_empty_expression():
     )
 
     assert response.status_code == 422
+
+
+def test_square_root_expression():
+    response = client.post(
+        "/api/calculate",
+        json={"expression": "sqrt(81)"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["result"] == 9
+
+
+def test_factorial_expression():
+    response = client.post(
+        "/api/calculate",
+        json={"expression": "factorial(5)"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["result"] == 120
+
+
+def test_caret_exponent_expression():
+    response = client.post(
+        "/api/calculate",
+        json={"expression": "2^3"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["result"] == 8
+
+
+def test_arbitrary_function_call_is_rejected():
+    response = client.post(
+        "/api/calculate",
+        json={"expression": "__import__('os').getcwd()"},
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Invalid expression"
+
+
+def test_unreasonably_large_exponent_is_rejected():
+    response = client.post(
+        "/api/calculate",
+        json={"expression": "10 ** 1001"},
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Invalid expression"
+
+
+def test_websocket_uses_supported_expression_parser():
+    with client.websocket_connect("/ws") as websocket:
+        websocket.send_json({"expression": "sqrt(81) + 2 ** 3"})
+
+        assert websocket.receive_json() == {
+            "event": "CALCULATION_STARTED",
+            "expression": "sqrt(81) + 2 ** 3",
+        }
+        assert websocket.receive_json() == {
+            "event": "CALCULATION_COMPLETED",
+            "expression": "sqrt(81) + 2 ** 3",
+            "result": 17.0,
+        }

@@ -1,6 +1,7 @@
 import ast
+import math
 import operator
-#Abstract syntax team
+
 
 class ExpressionParser:
 
@@ -12,6 +13,12 @@ class ExpressionParser:
         ast.Div: operator.truediv,
         ast.Mod: operator.mod,
         ast.Pow: operator.pow,
+        ast.BitXor: operator.pow,
+    }
+    functions = {
+        "sqrt": math.sqrt,
+        "abs": abs,
+        "factorial": math.factorial,
     }
 
     def parse(self, expression):
@@ -29,8 +36,8 @@ class ExpressionParser:
         except ZeroDivisionError:
             raise ValueError("Cannot divide by zero")
 
-        except (SyntaxError, ValueError, TypeError):
-            raise ValueError("Invalid expression")
+        except (SyntaxError, ValueError, TypeError, OverflowError) as error:
+            raise ValueError("Invalid expression") from error
 
     def evaluate(self, node):
         """
@@ -40,10 +47,33 @@ class ExpressionParser:
         # Number
         if isinstance(node, ast.Constant):
 
-            if isinstance(node.value, (int, float)):
+            if isinstance(node.value, (int, float)) and not isinstance(
+                node.value, bool
+            ):
                 return node.value
 
             raise ValueError("Invalid number")
+
+        # Supported single-argument mathematical functions.
+        if isinstance(node, ast.Call):
+            if (
+                not isinstance(node.func, ast.Name)
+                or node.func.id not in self.functions
+                or len(node.args) != 1
+                or node.keywords
+            ):
+                raise ValueError("Invalid function")
+
+            argument = self.evaluate(node.args[0])
+            if node.func.id == "factorial" and (
+                not isinstance(argument, int)
+                or isinstance(argument, bool)
+                or argument < 0
+                or argument > 170
+            ):
+                raise ValueError("Invalid factorial argument")
+
+            return self.functions[node.func.id](argument)
 
         # Binary operations
         if isinstance(node, ast.BinOp):
@@ -56,7 +86,16 @@ class ExpressionParser:
             if operation is None:
                 raise ValueError("Operator not supported")
 
-            return operation(left, right)
+            if isinstance(node.op, (ast.Pow, ast.BitXor)) and abs(right) > 1000:
+                raise ValueError("Exponent is too large")
+
+            result = operation(left, right)
+            if isinstance(result, int) and result.bit_length() > 4096:
+                raise ValueError("Result is too large")
+            if isinstance(result, float) and not math.isfinite(result):
+                raise ValueError("Invalid result")
+
+            return result
 
         # Positive and negative numbers
         if isinstance(node, ast.UnaryOp):

@@ -1,7 +1,24 @@
 import math
 
+from app.utils.expression_parser import ExpressionParser
+
 
 class CalculatorService:
+    def calculate_expression(self, expression):
+        result = ExpressionParser().parse(expression)
+
+        if isinstance(result, bool) or not isinstance(result, (int, float)):
+            raise ValueError("Invalid expression")
+
+        try:
+            is_finite = math.isfinite(result)
+        except OverflowError as error:
+            raise ValueError("Invalid expression") from error
+
+        if not is_finite:
+            raise ValueError("Invalid expression")
+
+        return float(result)
 
     def add(self, a, b):
         return a + b

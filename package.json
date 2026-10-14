@@ -1,0 +1,15 @@
+{
+  "name": "casioc",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev:frontend",
+    "start": "npm run dev",
+    "dev:all": "concurrently -k -n backend,frontend \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "cd backend && python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000",
+    "dev:frontend": "vite frontend --host 127.0.0.1 --port 5173 --strictPort"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "vite": "^7.1.12"
+  }
+}

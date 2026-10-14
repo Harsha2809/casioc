@@ -1,0 +1,12 @@
+ .gitignore                                 |  1 [32m+[m
+ README.md                                  | 57 [32m+++++++++++++++++[m[31m--------[m
+ backend/app/api/calculator.py              | 51 [32m+++++[m[31m------------------[m
+ backend/app/api/websocket.py               | 42 [32m++++++[m[31m-------------[m
+ backend/app/main.py                        | 12 [32m+++[m[31m---[m
+ backend/app/schemas/calculator.py          |  1 [32m+[m
+ backend/app/services/calculator_service.py | 17 [32m++++++++[m
+ backend/app/utils/expression_parser.py     | 49 [32m+++++++++++++++++++[m[31m---[m
+ backend/pytest.ini                         |  3 [32m+[m[31m-[m
+ backend/tests/test_api.py                  | 67 [32m+++++++++++++++++++++++++++++[m[31m-[m
+ frontend/js/ui.js                          |  5 [32m++[m[31m-[m
+ 11 files changed, 205 insertions(+), 100 deletions(-)

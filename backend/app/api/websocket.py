@@ -1,7 +1,10 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
+from app.services.calculator_service import CalculatorService
+
 
 router = APIRouter()
+calculator_service = CalculatorService()
 
 
 @router.websocket("/ws")
@@ -19,9 +22,9 @@ async def websocket_endpoint(
 
             data = await websocket.receive_json()
 
-            expression = data.get("expression")
+            expression = data.get("expression") if isinstance(data, dict) else None
 
-            if not expression:
+            if not isinstance(expression, str) or not expression.strip():
                 await websocket.send_json({
                     "event": "CALCULATION_ERROR",
                     "message": "Expression is required",
@@ -36,40 +39,21 @@ async def websocket_endpoint(
             })
 
             try:
-
-                # Temporary calculation.
-                # This will later call Member 1's
-                # calculator service.
-
-                result = eval(
-                    expression,
-                    {"__builtins__": {}},
-                    {},
-                )
-
-                # Send calculation result
+                result = calculator_service.calculate_expression(expression)
                 await websocket.send_json({
                     "event": "CALCULATION_COMPLETED",
                     "expression": expression,
                     "result": result,
                 })
-
-            except ZeroDivisionError:
-
+            except ValueError as error:
                 await websocket.send_json({
                     "event": "CALCULATION_ERROR",
-                    "message": "Cannot divide by zero",
-                })
-
-            except Exception:
-
-                await websocket.send_json({
-                    "event": "CALCULATION_ERROR",
-                    "message": "Invalid expression",
+                    "message": (
+                        "Cannot divide by zero"
+                        if str(error) == "Cannot divide by zero"
+                        else "Invalid expression"
+                    ),
                 })
 
     except WebSocketDisconnect:
-
-        print(
-            "WebSocket client disconnected"
-        )
+        return

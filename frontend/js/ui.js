@@ -20,6 +20,9 @@ const advancedButtons = document.querySelectorAll(".advanced-button");
 
 const historyList = document.getElementById("historyList");
 const clearHistoryButton = document.getElementById("clearHistory");
+const API_BASE_URL = (
+    window.CASIOC_API_URL || "http://127.0.0.1:8000"
+).replace(/\/+$/, "");
 
 
 /* =====================================================
@@ -489,7 +492,7 @@ async function calculateExpression() {
         showStatus("Calculating...");
 
         const response = await fetch(
-            "https://casioc-calculator-api-d4bcchdpf9h2f6ef.southindia-01.azurewebsites.net/api/calculate",
+            `${API_BASE_URL}/api/calculate`,
             {
                 method: "POST",
                 headers: {

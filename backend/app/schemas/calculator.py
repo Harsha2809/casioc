@@ -9,6 +9,7 @@ class CalculationRequest(BaseModel):
     expression: str = Field(
         ...,
         min_length=1,
+        max_length=512,
         description="Mathematical expression to calculate",
     )
 

@@ -1,10 +1,10 @@
-import math
 from fastapi import APIRouter, HTTPException
 
 from app.schemas.calculator import (
     CalculationRequest,
     CalculationResponse,
 )
+from app.services.calculator_service import CalculatorService
 
 
 router = APIRouter(
@@ -12,41 +12,7 @@ router = APIRouter(
     tags=["Calculator"],
 )
 
-
-
-
-def calculate_expression(expression: str) -> float:
-    try:
-        result = eval(
-            expression,
-            {
-                "__builtins__": {},
-                "sqrt": math.sqrt,
-                "abs": abs,
-                "factorial": math.factorial,
-            },
-            {},
-        )
-
-        if not isinstance(result, (int, float)):
-            raise ValueError("Invalid result")
-
-        if not math.isfinite(result):
-            raise ValueError("Invalid result")
-
-        return float(result)
-
-    except ZeroDivisionError:
-        raise HTTPException(
-            status_code=400,
-            detail="Cannot divide by zero",
-        )
-
-    except Exception:
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid expression",
-        )
+calculator_service = CalculatorService()
 
 
 @router.post(
@@ -60,12 +26,17 @@ async def calculate(
     Calculate a mathematical expression.
     """
 
-    result = calculate_expression(
-        request.expression
-    )
+    try:
+        result = calculator_service.calculate_expression(request.expression)
+    except ValueError as error:
+        detail = (
+            "Cannot divide by zero"
+            if str(error) == "Cannot divide by zero"
+            else "Invalid expression"
+        )
+        raise HTTPException(status_code=400, detail=detail) from error
 
     return CalculationResponse(
-
         expression=request.expression,
         result=result,
     )
